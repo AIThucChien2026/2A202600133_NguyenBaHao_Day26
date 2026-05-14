@@ -1,0 +1,10 @@
+{
+  "mcpServers": {
+    "sqlite-lab": {
+      "command": "b:\\VInuni_lab\\lab_26\\Day26-Track3-MCP-tool-integration\\venv\\Scripts\\python.exe",
+      "args": [
+        "b:\\VInuni_lab\\lab_26\\Day26-Track3-MCP-tool-integration\\implementation\\mcp_server.py"
+      ]
+    }
+  }
+}

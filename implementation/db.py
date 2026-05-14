@@ -1,5 +1,6 @@
 import sqlite3
 import os
+from contextlib import closing
 
 class ValidationError(Exception):
     """Raised when a request cannot be safely executed."""
@@ -16,7 +17,7 @@ class SQLiteAdapter:
 
     def list_tables(self):
         """Queries sqlite_master and returns non-internal tables."""
-        with self.connect() as conn:
+        with closing(self.connect()) as conn:
             cursor = conn.cursor()
             cursor.execute("SELECT name FROM sqlite_master WHERE type='table' AND name NOT LIKE 'sqlite_%';")
             return [row['name'] for row in cursor.fetchall()]
@@ -27,7 +28,7 @@ class SQLiteAdapter:
         if table_name not in self.list_tables():
             raise ValidationError(f"Table '{table_name}' does not exist.")
 
-        with self.connect() as conn:
+        with closing(self.connect()) as conn:
             cursor = conn.cursor()
             cursor.execute(f"PRAGMA table_info({table_name});")
             rows = cursor.fetchall()
@@ -115,7 +116,7 @@ class SQLiteAdapter:
 
         query += f" LIMIT {int(limit)} OFFSET {int(offset)}"
 
-        with self.connect() as conn:
+        with closing(self.connect()) as conn:
             cursor = conn.cursor()
             cursor.execute(query, params)
             return [dict(row) for row in cursor.fetchall()]
@@ -137,7 +138,7 @@ class SQLiteAdapter:
         placeholders = ", ".join(["?" for _ in values])
         query = f"INSERT INTO {table} ({cols}) VALUES ({placeholders})"
         
-        with self.connect() as conn:
+        with closing(self.connect()) as conn:
             cursor = conn.cursor()
             cursor.execute(query, list(values.values()))
             conn.commit()
@@ -190,7 +191,7 @@ class SQLiteAdapter:
         if group_by:
             query += f" GROUP BY {group_by}"
 
-        with self.connect() as conn:
+        with closing(self.connect()) as conn:
             cursor = conn.cursor()
             cursor.execute(query, params)
             return [dict(row) for row in cursor.fetchall()]

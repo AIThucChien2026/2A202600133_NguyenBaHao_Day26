@@ -25,6 +25,14 @@ Tài liệu này hướng dẫn các bước test và các điểm cần chụp 
 
 ![Schema Resource](./images/2.Schema%20Resource.png)
 
+### 📸 Ảnh 2b: Khám phá Tài nguyên bảng cụ thể (Single Table Schema)
+- **Thao tác:** 
+  - Chọn tab **Resources**.
+  - Tìm `schema://table/students` (hoặc tự nhập URI này), nhấn **Read Resource**.
+- **Yêu cầu:** Chụp màn hình khung kết quả hiện ra thông tin cấu trúc cột (id, name, cohort, email) của riêng bảng `students`.
+
+![Single Table Schema Resource](./images/2b.TableSchema.png)
+
 ### 📸 Ảnh 3: Truy vấn dữ liệu (Search Tool)
 - **Thao tác:**
   - Chọn tab **Tools**, chọn tool `search`.
@@ -48,6 +56,17 @@ Tài liệu này hướng dẫn các bước test và các điểm cần chụp 
 
 ![Aggregate Tool Success](./images/4.ToolAggregate.png)
 
+### 📸 Ảnh 4b: Thêm dữ liệu (Insert Tool)
+- **Thao tác:**
+  - Chọn tab **Tools**, chọn tool `insert`.
+  - Nhập Arguments:
+    - `table`: `"students"`
+    - `values`: `{"name": "Frank Castle", "cohort": "C3", "email": "frank@example.com"}`
+  - Nhấn **Run Tool**.
+- **Yêu cầu:** Chụp kết quả trả về: `"message": "Record inserted successfully"` kèm theo thông tin sinh viên vừa được thêm.
+
+![Insert Tool Success](./images/4b.ToolInsert.png)
+
 ### 📸 Ảnh 5: Xử lý lỗi (Validation - Unknown Table)
 - **Thao tác:**
   - Chọn tool `search`.
@@ -66,5 +85,30 @@ Tài liệu này hướng dẫn các bước test và các điểm cần chụp 
 - **Yêu cầu:** Chụp thông báo lỗi: `"Error: Invalid filter column: age"`
 
 ![Error Unknown Column](./images/6.ErrorColumns.png)
+
+### 📸 Ảnh 7: Xử lý lỗi (Validation - Empty Insert)
+- **Thao tác:**
+  - Chọn tab **Tools**, chọn tool `insert`.
+  - Nhập `table`: `"courses"`.
+  - Nhập `values`: `{}`.
+  - Nhấn **Run Tool**.
+- **Yêu cầu:** Chụp thông báo lỗi màu đỏ: `"Error: Insert values cannot be empty."`
+
+![Error Empty Insert](./images/7.ErrorEmptyInsert.png)
+
+### 📸 Ảnh 8: Tích hợp với Client (Gemini CLI)
+- **Thao tác:**
+  - Mở Terminal mới.
+  - Chạy lệnh thêm server vào Gemini CLI (chú ý sửa đường dẫn tuyệt đối cho đúng thư mục máy bạn, lệnh bên dưới là ví dụ):
+    ```bash
+    gemini mcp add sqlite-lab python "b:\VInuni_lab\lab_26\Day26-Track3-MCP-tool-integration\implementation\mcp_server.py"
+    ```
+  - Chạy lệnh test nghiệm thu để Gemini dùng tool tìm học sinh:
+    ```bash
+    gemini --allowed-mcp-server-names sqlite-lab --skip-trust -p "Use mcp_sqlite-lab_search with table='students' and filters={'cohort': 'A1'}"
+    ```
+- **Yêu cầu:** Chụp toàn bộ màn hình Terminal cho thấy lệnh đã chạy, Gemini có gọi tool `search` và liệt kê ra được Alice và Bob.
+
+![Gemini CLI Integration](./images/8.GeminiCLI.png)
 
 ---
